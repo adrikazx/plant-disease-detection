@@ -59,8 +59,8 @@ def predict(image):
 if __name__ == "__main__":
     print("Starting Gradio Web UI...")
     
-    # Utilizing a modern Blocks layout with an Emerald theme for that "Plant" aesthetic!
-    with gr.Blocks(theme=gr.themes.Soft(primary_hue="emerald", secondary_hue="green")) as interface:
+    # Utilizing a modern Blocks layout (default theme to prevent loading errors)
+    with gr.Blocks() as interface:
         gr.Markdown(
             """
             # 🌱 Advanced Plant Disease AI Diagnostic System
@@ -84,5 +84,5 @@ if __name__ == "__main__":
         submit_btn.click(fn=predict, inputs=image_input, outputs=label_output)
         clear_btn.click(fn=lambda: None, inputs=None, outputs=image_input)
         
-    # Launch on all interfaces!
-    interface.launch(server_name="0.0.0.0", server_port=7860, share=False)
+    # Launch on all interfaces with a public internet link!
+    interface.launch(server_name="127.0.0.1", server_port=7860, share=True)
