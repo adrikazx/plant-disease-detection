@@ -59,20 +59,30 @@ def predict(image):
 if __name__ == "__main__":
     print("Starting Gradio Web UI...")
     
-    interface_title = "🌿 Plant Disease Detection System"
-    interface_desc = (
-        "Upload an image of a plant leaf to identify potential diseases using our Convolutional Neural Network."
-        "\nIf you haven't trained it yet, download the dataset using `python download_data.py` and run `python train.py`."
-    )
-    
-    interface = gr.Interface(
-        fn=predict,
-        inputs=gr.Image(type="pil", label="Upload Leaf Image"),
-        outputs=gr.Label(num_top_classes=3, label="Predictions"),
-        title=interface_title,
-        description=interface_desc,
-        theme="huggingface"
-    )
-    
-    # For local inference, allow listening on 0.0.0.0
+    # Utilizing a modern Blocks layout with an Emerald theme for that "Plant" aesthetic!
+    with gr.Blocks(theme=gr.themes.Soft(primary_hue="emerald", secondary_hue="green")) as interface:
+        gr.Markdown(
+            """
+            # 🌱 Advanced Plant Disease AI Diagnostic System
+            Welcome to your **ResNet18-powered diagnostic tool**. Please upload a high-resolution image of a plant leaf below to detect anomalies and identify potential diseases with top-3 confidence scores.
+            """
+        )
+        
+        with gr.Row():
+            # Left column for the input
+            with gr.Column(scale=1):
+                image_input = gr.Image(type="pil", label="Upload Leaf Image here ➔")
+                with gr.Row():
+                    clear_btn = gr.Button("Clear Image")
+                    submit_btn = gr.Button("🔍 Diagnose Plant", variant="primary")
+            
+            # Right column for the AI's output
+            with gr.Column(scale=1):
+                label_output = gr.Label(num_top_classes=3, label="AI Confidence Levels")
+                
+        # Link the buttons to their actions!
+        submit_btn.click(fn=predict, inputs=image_input, outputs=label_output)
+        clear_btn.click(fn=lambda: None, inputs=None, outputs=image_input)
+        
+    # Launch on all interfaces!
     interface.launch(server_name="0.0.0.0", server_port=7860, share=False)
